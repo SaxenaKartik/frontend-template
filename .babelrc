@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./"],
+      "alias": {
+        "@screens": "./screens",
+        "@config": "./config",
+      }
+    }]
+  ]
+}
