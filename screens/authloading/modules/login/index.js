@@ -39,7 +39,9 @@ export default class Login extends Component{
         this.setState({
           isLoading: false,
           dataSource : responseJson.token
-        }, function(){}
+        }, function(){
+            this.props.navigation.navigate('Homepage')
+        }
         );
       })
       .catch((error) =>{
@@ -70,8 +72,10 @@ export default class Login extends Component{
 
     render(){
       const {username, password, usernameError, passwordError, isVerifiedData} = this.state
+      const {navigation} = this.props
         return(
             <View style = {styles.loginPageContainer}>
+
                 <TextField
                   label = "Phone Number"
                   labelHeight = {15}
@@ -79,7 +83,7 @@ export default class Login extends Component{
                   onChangeText = { (username) => this.validate('username', username)}
                   error = {usernameError}
                   returnKeyType = "next"
-                  fontSize = {12}
+                  fontSize = {16}
                   onSubmitEditing = {()=>this._next()}
                   blurOnSubmit = {false}
                   prefix = "+91"
@@ -90,19 +94,24 @@ export default class Login extends Component{
                   value = {password}
                   onChangeText = { (password) => this.validate('password', password)}
                   error = {passwordError}
-                  returnKeyType = "next"
-                  fontSize = {12}
+                  fontSize = {16}
                   secureTextEntry = {true}
                   autoComplete = {false}
                   autoCapitalize = "none"
                   returnKeyType = "done"
                   blurOnSubmit = {true}
                 />
+                <View style = {styles.buttonLink}>
                 <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> isVerifiedData ? this.generateToken() : null}>
                   <View pointerEvents = {isVerifiedData ? "auto": "none"} style = {isVerifiedData? styles.signInButton : styles.signInButtonDisabled}>
                     <Text style = {styles.signInButtonText}>Login</Text>
                   </View>
                 </TouchableCustom>
+                <Text> Don't have an account?</Text>
+                <TouchableCustom underlayColor = {'ffffff10'} onPress={() => navigation.navigate('Register')}>
+                  <Text style={{color: '#ee4e34'}} >Sign Up</Text>
+                </TouchableCustom>
+                </View>
             </View>
         )
     }

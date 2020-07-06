@@ -7,9 +7,9 @@ export const validatePassword = (password) => {
 }
 
 export const validateName = (name) =>{
-  return /^[a-zA-Z]+ [a-zA-Z]*/.test(name) ? true : false;
+  return /^[a-zA-Z]+\s*[a-zA-Z]*/.test(name) ? true : false;
 }
 
 export const validateEmail = (email) => {
-  return /^(([^<>()[]\.,;:s@"]+(.[^<>()[]\.,;:s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/.text(email) ? true : false;
+  return /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email) ? true : false;
 }

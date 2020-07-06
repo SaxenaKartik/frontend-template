@@ -4,7 +4,8 @@ import { createStackNavigator } from "react-navigation-stack";
 import Register from '@screens/authloading/modules/register';
 
 export const Auth = createStackNavigator({
-    Login: Login
+    Login: Login,
+    Register: Register
 },{
     headerMode: 'none',
     initialRouteName: 'Login',

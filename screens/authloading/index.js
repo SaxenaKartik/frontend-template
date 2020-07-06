@@ -7,6 +7,7 @@ export default class AuthLoading extends Component{
             <View>
                 <Button
                     title="SignUp"
+                    onPress={() => this.props.navigation.navigate('Register')}
                 />
                 <Button
                     title="Login"
