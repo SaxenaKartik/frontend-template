@@ -5,7 +5,7 @@
       "alias": {
         "@screens": "./screens",
         "@config": "./config",
-        "@asstes": "./assets",
+        "@assets": "./assets",
       }
     }]
   ]
