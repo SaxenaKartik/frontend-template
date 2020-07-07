@@ -1,10 +1,11 @@
 import React, {Component, useState } from 'react';
-import {View, Text, TextInput, Button} from 'react-native';
+import {View, Text, TextInput, Button, Image, ToastAndroid} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import {validateMobile, validatePassword} from '@config/validators.js';
 import {usernameErrorMsg, passwordErrorMsg} from '@config/messages.js';
 import TouchableCustom from '@config/touchable_custom.js';
 import styles from './login.style.js';
+import {primaryColor} from '@config/environments.js';
 
 export default class Login extends Component{
     constructor(props){
@@ -15,10 +16,13 @@ export default class Login extends Component{
             password : "",
             usernameError : "",
             passwordError : "",
-            isVerifiedData : true,
+            isVerifiedData : false,
 
         }
     }
+    showToast(){
+      ToastAndroid.show("Username or Password may be incorrect", ToastAndroid.SHORT);
+    };
     generateToken(){
         return fetch("http://ec2-13-235-23-66.ap-south-1.compute.amazonaws.com/api/login/"
         ,{
@@ -40,7 +44,7 @@ export default class Login extends Component{
           isLoading: false,
           dataSource : responseJson.token
         }, function(){
-            this.props.navigation.navigate('Homepage')
+            this.props.navigation.navigate('Homepage');
         }
         );
       })
@@ -75,9 +79,16 @@ export default class Login extends Component{
       const {navigation} = this.props
         return(
             <View style = {styles.loginPageContainer}>
-
+                <View style = {styles.imageContainer}>
+                  <Image style = {styles.logo}
+                    source = {require("@assets/logo.png")}
+                    resizeMode = "contain"
+                  />
+                </View>
                 <TextField
+                  style = {styles.textField}
                   label = "Phone Number"
+                  tintColor = {primaryColor}
                   labelHeight = {15}
                   value = {username}
                   onChangeText = { (username) => this.validate('username', username)}
@@ -89,7 +100,9 @@ export default class Login extends Component{
                   prefix = "+91"
                 />
                 <TextField
+                  style = {styles.textField}
                   label = "Password"
+                  tintColor = {primaryColor}
                   labelHeight = {15}
                   value = {password}
                   onChangeText = { (password) => this.validate('password', password)}
@@ -101,16 +114,18 @@ export default class Login extends Component{
                   returnKeyType = "done"
                   blurOnSubmit = {true}
                 />
-                <View style = {styles.buttonLink}>
-                <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> isVerifiedData ? this.generateToken() : null}>
-                  <View pointerEvents = {isVerifiedData ? "auto": "none"} style = {isVerifiedData? styles.signInButton : styles.signInButtonDisabled}>
-                    <Text style = {styles.signInButtonText}>Login</Text>
+                <View style = {styles.buttonContainer}>
+                  <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> isVerifiedData ? this.generateToken() : this.showToast()}>
+                    <View style = {isVerifiedData? styles.signInButton : styles.signInButtonDisabled}>
+                      <Text style = {styles.signInButtonText}>Login</Text>
+                    </View>
+                  </TouchableCustom>
+                  <View style = {styles.linkContainer}>
+                    <Text> Don't have an account?</Text>
+                    <TouchableCustom underlayColor = {'ffffff10'} onPress={() => navigation.navigate('Register')}>
+                      <Text style={styles.link} >  Sign Up</Text>
+                    </TouchableCustom>
                   </View>
-                </TouchableCustom>
-                <Text> Don't have an account?</Text>
-                <TouchableCustom underlayColor = {'ffffff10'} onPress={() => navigation.navigate('Register')}>
-                  <Text style={{color: '#ee4e34'}} >Sign Up</Text>
-                </TouchableCustom>
                 </View>
             </View>
         )
