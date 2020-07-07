@@ -7,21 +7,23 @@ export default styles = StyleSheet.create({
     backgroundColor : commonBackgroundColor,
     flex : 1,
     display : "flex",
-    justifyContent : "center",
+    padding : 30,
   },
   signInButtonDisabled :  {
+    padding : 10,
     backgroundColor : secondaryColor,
     borderRadius : 30,
-    marginTop : 25,
+    marginTop : deviceHeight-745,
     height : 55,
     justifyContent : "center",
     alignItems : "center",
     width : deviceWidth-150,
   },
   signInButton :  {
+    padding : 10,
     backgroundColor : primaryColor,
     borderRadius : 30,
-    marginTop : 25,
+    marginTop : deviceHeight-745,
     height : 55,
     justifyContent : "center",
     alignItems : "center",
@@ -31,9 +33,29 @@ export default styles = StyleSheet.create({
     color : '#ffffff',
     fontSize : 12,
   },
-  buttonLink : {
+  buttonContainer : {
+    display : "flex",
+    flex : 0.5,
+    alignItems: "center",
+  },
+  linkContainer : {
+    alignItems: "center",
+    flexDirection : "row",
+  },
+  logo : {
+    width : deviceWidth - 96,
+    height : deviceHeight - 450,
+  },
+  imageContainer :{
+    flex : 1.2,
     display : "flex",
     alignItems: "center",
     justifyContent : "center",
-  }
+  },
+  textField : {
+  },
+  link : {
+    padding : 10,
+    color: '#ee4e34',
+  },
 })
