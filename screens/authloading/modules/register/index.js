@@ -1,15 +1,16 @@
 import React, {Component, useState } from 'react';
-import {View, Text, TextInput, Button, Image, ToastAndroid} from 'react-native';
+import {View, Text, TextInput, Button, Image, ToastAndroid, KeyboardAvoidingView, Keyboard, Animated} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import {validateMobile, validatePassword, validateEmail, validateName} from '@config/validators.js';
 import {nameErrorMsg, passwordErrorMsg, emailErrorMsg, phoneNumberErrorMsg} from '@config/messages.js';
 import TouchableCustom from '@config/touchable_custom.js';
 import styles from './register.style.js';
-import {primaryColor} from '@config/environments.js';
+import {primaryColor, deviceHeight} from '@config/environments.js';
 
 export default class Register extends Component{
     constructor(props){
         super(props);
+        this.imageHeight = new Animated.Value(deviceHeight-500);
         this.state={
             isLoading: true,
             name : "",
@@ -28,6 +29,32 @@ export default class Register extends Component{
     static navigationOptions = {
       title : "Register"
     }
+
+    UNSAFE_componentWillMount(){
+      this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+      this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    }
+    componentWillUnmount(){
+      this.keyboardDidShowSub.remove();
+      this.keyboardDidHideSub.remove();
+    }
+
+    keyboardDidShow = (event) => {
+        Animated.timing(this.imageHeight, {
+          useNativeDriver : false,
+          duration: event.duration,
+          toValue: deviceHeight-650,
+        }).start();
+    };
+
+    keyboardDidHide = (event) => {
+        Animated.timing(this.imageHeight, {
+          useNativeDriver : false,
+          duration: event.duration,
+          toValue: deviceHeight-500,
+        }).start();
+    };
+
     showToast(){
       ToastAndroid.show("Please enter valid details", ToastAndroid.SHORT);
     };
@@ -98,9 +125,9 @@ export default class Register extends Component{
       const {name, password, email, phoneNumber, nameError, passwordError, emailError, phoneNumberError, isVerifiedData} = this.state
       const {navigation} = this.props
         return(
-            <View style = {styles.registerPageContainer}>
+            <KeyboardAvoidingView style = {styles.registerPageContainer} behaviour = "padding">
               <View style = {styles.imageContainer}>
-                <Image style = {styles.logo} source = {require("@assets/logo.png")} resizeMode = "contain"/>
+                <Animated.Image style = {[styles.logo, {height : this.imageHeight}]} source = {require("@assets/logo.png")} resizeMode = "contain"/>
               </View>
               <TextField
                 label = "Name"
@@ -111,7 +138,8 @@ export default class Register extends Component{
                 error = {nameError}
                 returnKeyType = "next"
                 fontSize = {16}
-                onSubmitEditing = {()=>this._next('one')}
+                onSubmitEditing = {()=>{this.secondTextInput.focus();}}
+                // onSubmitEditing = {()=>this._next('one')}
                 blurOnSubmit = {false}
               />
               <TextField
@@ -121,10 +149,12 @@ export default class Register extends Component{
                 value = {email}
                 onChangeText = { (email) => this.validate('email', email)}
                 error = {emailError}
-                inputRef = {ref => {this._inputs['one'] = ref}}
+                ref =  {(input) => { this.secondTextInput = input; }}
+                // inputRef = {ref => {this._inputs['one'] = ref}}
                 returnKeyType = "next"
                 fontSize = {16}
-                onSubmitEditing = {()=>this._next('two')}
+                onSubmitEditing = {()=>{this.thirdTextInput.focus();}}
+                // onSubmitEditing = {()=>this._next('two')}
                 blurOnSubmit = {false}
               />
               <TextField
@@ -134,10 +164,12 @@ export default class Register extends Component{
                 value = {phoneNumber}
                 onChangeText = { (phoneNumber) => this.validate('phoneNumber', phoneNumber)}
                 error = {phoneNumberError}
-                inputRef = {ref => {this._inputs['two'] = ref}}
+                ref = {(input) => { this.thirdTextInput = input; }}
+                // inputRef = {ref => {this._inputs['two'] = ref}}
                 returnKeyType = "next"
                 fontSize = {16}
-                onSubmitEditing = {()=>this._next('three')}
+                onSubmitEditing = {()=>{this.fourthTextInput.focus();}}
+                // onSubmitEditing = {()=>this._next('three')}
                 blurOnSubmit = {false}
                 prefix = "+91"
               />
@@ -150,7 +182,8 @@ export default class Register extends Component{
                 error = {passwordError}
                 fontSize = {16}
                 secureTextEntry = {true}
-                inputRef = {ref => {this._inputs['three']}}
+                ref = {(input) => { this.fourthTextInput = input; }}
+                // inputRef = {ref => {this._inputs['three']}}
                 autoComplete = {false}
                 autoCapitalize = "none"
                 returnKeyType = "done"
@@ -169,7 +202,8 @@ export default class Register extends Component{
                   </TouchableCustom>
                 </View>
               </View>
-            </View>
+              <View style={{ flex : 1 }} />
+            </KeyboardAvoidingView>
         )
     }
 }
