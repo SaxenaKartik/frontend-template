@@ -9,7 +9,7 @@ export default class Homepage extends Component{
         return(
           <View style = {styles.homePageContainer}>
             <View style = {styles.buttonLink}>
-              <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> navigation.navigate('Register')}>
+              <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> navigation.navigate('Request')}>
                 <View style = {styles.requestButton}>
                   <Text style = {styles.requestButtonText}>Create Request</Text>
                 </View>
