@@ -1,15 +1,16 @@
 import React, {Component, useState } from 'react';
-import {View, Text, TextInput, Button, Image, ToastAndroid} from 'react-native';
+import {View, Text, TextInput, Button, Image, ToastAndroid, Animated, Keyboard, KeyboardAvoidingView} from 'react-native';
 import {TextField} from 'react-native-material-textfield';
 import {validateMobile, validatePassword} from '@config/validators.js';
 import {usernameErrorMsg, passwordErrorMsg} from '@config/messages.js';
 import TouchableCustom from '@config/touchable_custom.js';
 import styles from './login.style.js';
-import {primaryColor} from '@config/environments.js';
+import {primaryColor, deviceHeight} from '@config/environments.js';
 
 export default class Login extends Component{
     constructor(props){
         super(props);
+        this.imageHeight = new Animated.Value(deviceHeight-450);
         this.state={
             isLoading: true,
             username : "",
@@ -17,9 +18,34 @@ export default class Login extends Component{
             usernameError : "",
             passwordError : "",
             isVerifiedData : false,
-
         }
     }
+
+    UNSAFE_componentWillMount(){
+      this.keyboardDidShowSub = Keyboard.addListener('keyboardDidShow', this.keyboardDidShow);
+      this.keyboardDidHideSub = Keyboard.addListener('keyboardDidHide', this.keyboardDidHide);
+    }
+    componentWillUnmount(){
+      this.keyboardDidShowSub.remove();
+      this.keyboardDidHideSub.remove();
+    }
+
+    keyboardDidShow = (event) => {
+        Animated.timing(this.imageHeight, {
+          useNativeDriver : false,
+          duration: event.duration,
+          toValue: deviceHeight-600,
+        }).start();
+    };
+
+    keyboardDidHide = (event) => {
+        Animated.timing(this.imageHeight, {
+          useNativeDriver : false,
+          duration: event.duration,
+          toValue: deviceHeight-450,
+        }).start();
+    };
+
     showToast(){
       ToastAndroid.show("Username or Password may be incorrect", ToastAndroid.SHORT);
     };
@@ -78,41 +104,39 @@ export default class Login extends Component{
       const {username, password, usernameError, passwordError, isVerifiedData} = this.state
       const {navigation} = this.props
         return(
-            <View style = {styles.loginPageContainer}>
+            <KeyboardAvoidingView style = {styles.loginPageContainer} behaviour = "padding">
                 <View style = {styles.imageContainer}>
-                  <Image style = {styles.logo}
-                    source = {require("@assets/logo.png")}
-                    resizeMode = "contain"
-                  />
+                <Animated.Image style = {[styles.logo, {height : this.imageHeight}]} source = {require("@assets/logo.png")} resizeMode = "contain" />
                 </View>
                 <TextField
-                  style = {styles.textField}
-                  label = "Phone Number"
-                  tintColor = {primaryColor}
-                  labelHeight = {15}
-                  value = {username}
-                  onChangeText = { (username) => this.validate('username', username)}
-                  error = {usernameError}
-                  returnKeyType = "next"
-                  fontSize = {16}
-                  onSubmitEditing = {()=>this._next()}
-                  blurOnSubmit = {false}
-                  prefix = "+91"
+                    style = {styles.textField}
+                    label = "Phone Number"
+                    tintColor = {primaryColor}
+                    labelHeight = {15}
+                    value = {username}
+                    onChangeText = { (username) => this.validate('username', username)}
+                    error = {usernameError}
+                    returnKeyType = "next"
+                    fontSize = {16}
+                    onSubmitEditing = {() => { this.secondTextInput.focus(); }}
+                    blurOnSubmit = {false}
+                    prefix = "+91"
                 />
                 <TextField
-                  style = {styles.textField}
-                  label = "Password"
-                  tintColor = {primaryColor}
-                  labelHeight = {15}
-                  value = {password}
-                  onChangeText = { (password) => this.validate('password', password)}
-                  error = {passwordError}
-                  fontSize = {16}
-                  secureTextEntry = {true}
-                  autoComplete = {false}
-                  autoCapitalize = "none"
-                  returnKeyType = "done"
-                  blurOnSubmit = {true}
+                    style = {styles.textField}
+                    label = "Password"
+                    tintColor = {primaryColor}
+                    labelHeight = {15}
+                    value = {password}
+                    ref = {(input) => { this.secondTextInput = input; }}
+                    onChangeText = { (password) => this.validate('password', password)}
+                    error = {passwordError}
+                    fontSize = {16}
+                    secureTextEntry = {true}
+                    autoComplete = {false}
+                    autoCapitalize = "none"
+                    returnKeyType = "done"
+                    blurOnSubmit = {true}
                 />
                 <View style = {styles.buttonContainer}>
                   <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> isVerifiedData ? this.generateToken() : this.showToast()}>
@@ -127,7 +151,8 @@ export default class Login extends Component{
                     </TouchableCustom>
                   </View>
                 </View>
-            </View>
+                <View style={{ flex : 1 }} />
+            </KeyboardAvoidingView>
         )
     }
 }
