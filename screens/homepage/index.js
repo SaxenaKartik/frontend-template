@@ -11,7 +11,7 @@ export default class Homepage extends Component{
             <View style = {styles.buttonLink}>
               <TouchableCustom underlayColor = {'ffffff10'} onPress={()=> navigation.navigate('Request')}>
                 <View style = {styles.requestButton}>
-                  <Text style = {styles.requestButtonText}>Create Request</Text>
+                  <Text style = {styles.requestButtonText}>Go to requests!</Text>
                 </View>
               </TouchableCustom>
             </View>
