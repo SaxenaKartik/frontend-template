@@ -70,8 +70,10 @@ export default class Login extends Component{
           isLoading: false,
           dataSource : responseJson.token
         }, function(){
-            this.props.navigation.navigate('Homepage');
-        }
+
+          // make get request to user API searching for a user based on phone number and store the auth token & id
+            this.state.dataSource ? this.props.navigation.navigate('Homepage') : this.showToast()
+         }
         );
       })
       .catch((error) =>{
