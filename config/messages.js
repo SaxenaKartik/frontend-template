@@ -7,3 +7,7 @@ export const nameErrorMsg = "Please enter a valid name"
 export const emailErrorMsg = "Please enter a valid email address"
 
 export const phoneNumberErrorMsg = "Please add a valid 10 digit mobile number"
+
+export const itemsErrorMsg = "Please enter a valid list of items"
+
+export const addrErrorMsg = "Please enter a valid address"
