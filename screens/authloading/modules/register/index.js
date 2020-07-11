@@ -58,6 +58,9 @@ export default class Register extends Component{
     showToast(){
       ToastAndroid.show("Please enter valid details", ToastAndroid.SHORT);
     };
+    showToastFailure(){
+      ToastAndroid.show("User could not be registered", ToastAndroid.SHORT);
+    };
     sendRequest(){
         return fetch("http://ec2-13-235-23-66.ap-south-1.compute.amazonaws.com/api/user/"
         ,{
@@ -81,7 +84,8 @@ export default class Register extends Component{
           isLoading: false,
           dataSource : responseJson.id
         }, function(){
-            this.props.navigation.navigate('Homepage');
+          // make post request to login API and store the auth token & id
+            this.state.dataSource ? this.props.navigation.navigate('Homepage') : this.showToastFailure()
         }
         );
       })
@@ -117,9 +121,9 @@ export default class Register extends Component{
       }
     }
 
-    _next() {
-      this._inputs[field] && this._inputs[field].focus();
-    }
+    // _next() {
+    //   this._inputs[field] && this._inputs[field].focus();
+    // }
 
     render(){
       const {name, password, email, phoneNumber, nameError, passwordError, emailError, phoneNumberError, isVerifiedData} = this.state
